@@ -5,8 +5,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="./css/spectre.min.css">
+    <script src="./js/vendors/vue.min.js"></script>
+    <script defer src="./js/main.js"></script>
 </head>
 <body>
-    
+
+    <div id="app">
+        <section class="todo container">
+            <h1 class="text-center">Lista de la compra</h1>
+            <ul class="menu">
+                <!-- menu item with form control -->
+                <li v-for="producto in productos" class="menu-item">
+                    <label class="form-checkbox">
+                        <input type="checkbox" :checked="producto.fields.Adquirido">
+                        <i class="form-icon"></i>{{producto.fields.Nombre}}
+                    </label>
+                    <span class="divider"></span>
+                </li>
+            </ul>
+        </section>
+    </div>
+
+
 </body>
 </html>
