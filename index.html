@@ -14,17 +14,23 @@
     <div id="app">
         <section class="todo container">
             <h1 class="text-center">Lista de la compra</h1>
+            <section>
+                <p>Añadir producto</p>
+                <input type="text" v-model="nuevoProducto" @keypress.enter="anyadirProducto">
+            </section>
             <ul v-if="productos.length > 0" class="menu">
                 <!-- menu item with form control -->
                 <li v-for="producto in productos" class="menu-item">
-                    <label class="form-checkbox">
+                    <label class="form-checkbox" v-if="producto.id !== productoEditar">
                         <input @click="actualizarAdquiridoEnAPI(producto.id, !producto.fields.Adquirido)" type="checkbox" :checked="producto.fields.Adquirido">
-                        <i class="form-icon"></i>{{producto.fields.Nombre}}
+                        <span @click="abrirEditar(producto.id, producto.fields.Nombre)">
+                            <i class="form-icon"></i>{{producto.fields.Nombre}}
+                        </span>
                         <button @click="borrarProducto(producto.id)" class="btn btn-error">
                             Borrar
                         </button>
                     </label>
-                    <div>
+                    <div v-else>
                         <input @keypress.enter="actualizarProductoEnAPI(producto.id, productoActualizar)" v-model="productoActualizar" type="text" class="">
                     </div>
                     <span class="divider"></span>

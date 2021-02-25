@@ -4,18 +4,42 @@ const url = "https://api.airtable.com/v0/appZjIeIIkjmA29vh/Productos?&view=Grid%
 const urlBorrar = "https://api.airtable.com/v0/appZjIeIIkjmA29vh/Productos?records[]=";
 const urlActualizar ="https://api.airtable.com/v0/appZjIeIIkjmA29vh/Productos"
 const authorization = 'Bearer keyswzmG8Q7KZoVp0';
+const urlAnyadir = 'https://api.airtable.com/v0/appZjIeIIkjmA29vh/Productos'
 
 var app = new Vue({
     el: '#app',
     data: {
         productos: [],
-        productoActualizar: ''
+        productoActualizar: '',
+        nuevoProducto: '',
+        productoEditar: false
     },
     mounted: function(){
         this.obtenerProductos();
 
     },
     methods: {
+        anyadirProducto: function(){
+            fetch(urlAnyadir, {
+                headers: {
+                    'Content-Type': "application/json",
+                    'Authorization': authorization
+                },
+                method: 'POST',
+                body: JSON.stringify({
+                    "records": [
+                        {
+                          "fields": {
+                            "Nombre": this.nuevoProducto,
+                            "Adquirido": false
+                          }
+                        }]
+                })
+            })
+            .then(()=> this.nuevoProducto = '')
+            .then(()=> this.obtenerProductos())
+
+        },
         obtenerProductos: function(){
 
             fetch(url, {
@@ -49,6 +73,9 @@ var app = new Vue({
         },
         actualizarProductoEnAPI: function(id,nuevoTexto) {
 
+            //cierro el input de actualizar con esta linea
+            this.productoEditar=false;
+
             fetch(urlActualizar, {
                 headers: {
                     'Content-Type': "application/json",
@@ -65,7 +92,9 @@ var app = new Vue({
                           }
                         }]
                 })
-            });
+            })
+            .then(()=> this.obtenerProductos());
+
         },
         actualizarAdquiridoEnAPI: function(id,checked) {
 
@@ -85,7 +114,9 @@ var app = new Vue({
                           }
                         }]
                 })
-            });
+            })
+            .then(()=> this.obtenerProductos());
+
 
             //actualizamos en local
             this.productos = this.productos.map((producto) => {
@@ -99,6 +130,12 @@ var app = new Vue({
                 }
 
             })
+
+        },
+        abrirEditar: function(id, nombre) {
+            this.productoEditar = id;
+            this.productoActualizar = nombre;
+            
         }
     }
 
